@@ -7,6 +7,7 @@ const controller = require("../controllers/studioController")
 //GET list all studios
 
 router.get('/', controller.getAllStudio)
+router.get('/:id', controller.getStudioById)
 
 //CREATE create a new studio
 
@@ -18,6 +19,6 @@ router.delete('/:id', controller.deleteStudio)
 
 // PUT update studio by id
 
-router.put('/:id', controller.updateStudio)
+router.patch('/:id', controller.updateStudio)
 
 module.exports = router
