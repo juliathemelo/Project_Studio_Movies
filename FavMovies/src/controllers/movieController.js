@@ -3,14 +3,36 @@ const Movie = require('../models/movie')
 const Studio = require('../models/studio')
 
 const getAllMovies = async (req, res) => {
-    const movies = await Movie.find().populate('studio')
-    res.json(movies)
+    const authHeader = req.get('authorization');
+    const token = authHeader.split(' ')[1]
+  
+    if (!token) {
+      return res.status(403).send({message: "Kd a tokenzinnn"})
+    }
+    jwt.verify(token, process.env.SECRET, async (err) => {
+      if (err) {
+        res.status(403).send({ message: 'Token não válido', err})
+      }
+        const movies = await Movie.find().populate('studio')
+        res.json(movies)
+    })
 }
 
 const getById = async (req, res) => {
-    const requestId = req.params.id
-    const movies = await Movie.findOne({ _id: requestId }).populate('studio')
-    res.json(movies)
+    const authHeader = req.get('authorization');
+    const token = authHeader.split(' ')[1]
+  
+    if (!token) {
+      return res.status(403).send({message: "Kd a tokenzinnn"})
+    }
+    jwt.verify(token, process.env.SECRET, async (err) => {
+      if (err) {
+        res.status(403).send({ message: 'Token não válido', err})
+      }
+        const requestId = req.params.id
+        const movies = await Movie.findOne({ _id: requestId }).populate('studio')
+        res.json(movies)
+    })
 }
 
 const getByStudio = async (req, res) => {

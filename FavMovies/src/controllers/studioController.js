@@ -1,15 +1,40 @@
 const Studio = require('../models/studio')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 const getAllStudio = async (req, res) => {
-    const studios = await Studio.find()
-    res.json(studios)
-}
+    const authHeader = req.get('authorization');
+    const token = authHeader.split(' ')[1]
+  
+    if (!token) {
+      return res.status(403).send({message: "Kd a tokenzinnn"})
+    }
+    jwt.verify(token, process.env.SECRET, async (err) => {
+      if (err) {
+        res.status(403).send({ message: 'Token não válido', err})
+      }
+  
+      const studio = await Studio.find()
+      res.json(studio)
+    })
+  }
 
 const getStudioById = async (req,res) => {
-    const requestId = req.params.id
-    const StudiosById = await Studio.findOne({ _id: requestId })
-    res.json(StudiosById)
+    const authHeader = req.get('authorization');
+    const token = authHeader.split(' ')[1]
+  
+    if (!token) {
+      return res.status(403).send({message: "Kd a tokenzinnn"})
+    }
+    jwt.verify(token, process.env.SECRET, async (err) => {
+      if (err) {
+        res.status(403).send({ message: 'Token não válido', err})
+      }
+        const requestId = req.params.id
+        const StudiosById = await Studio.findOne({ _id: requestId })
+        res.json(StudiosById)
+    })
 }
 
 const createStudio = async (req,res) => {
